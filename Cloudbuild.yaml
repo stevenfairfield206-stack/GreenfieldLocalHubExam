@@ -1,12 +1,4 @@
-name: Greenfield Local Hub – Exam Pipeline
-
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
-  steps:
+steps:
     # Step 1: Get all repository files
     - name: Checkout repository
       uses: actions/checkout@v4
