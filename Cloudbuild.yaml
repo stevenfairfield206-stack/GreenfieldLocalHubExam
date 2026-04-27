@@ -1,61 +1,67 @@
 steps:
-  # Step 1: Get all repository files
-  - name: Checkout repository
-    uses: actions/checkout@v4
-        
-  # Step 2: List files (exam evidence & debugging)
-  - name: Show repository structure
-    run: ls -R
-        
-  # Step 3: Validate HTML files if present
-  - name: HTML validation
-    run: |
-      if ls *.html >/dev/null 2>&1; then
-        echo "HTML files detected"
-          echo "Basic HTML validation passed"
-      else
-        echo "No HTML files found"
-      fi
+  # Step 1: Checkout is automatic in Cloud Build, but we can list files
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        ls -R
 
-   # CSS validation checks   
-   - name: CSS validation
-     run: |
-       if ls *.css >/dev/null 2>&1; then
-         echo "CSS files detected"
-            echo "Basic CSS validation passed"
-       else
-         echo "No CSS files found"
-       fi
+  # Step 2: Validate HTML files
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        if ls *.html >/dev/null 2>&1; then
+          echo "HTML files detected"
+          echo "Basic HTML validation passed"
+        else
+          echo "No HTML files found"
+        fi
+
+  # Step 3: CSS validation checks   
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        if ls *.css >/dev/null 2>&1; then
+          echo "CSS files detected"
+          echo "Basic CSS validation passed"
+        else
+          echo "No CSS files found"
+        fi
         
-    # Step 5: Validate JavaScript files if present
-    - name: JavaScript validation
-      run: |
-       if ls *.js >/dev/null 2>&1; then
-        echo "JavaScript files detected"
-         echo "Basic JS validation passed"
-       else
-        echo "No JavaScript files found"
-       fi
+  # Step 4: Validate JavaScript files
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        if ls *.js >/dev/null 2>&1; then
+          echo "JavaScript files detected"
+          echo "Basic JS validation passed"
+        else
+          echo "No JavaScript files found"
+        fi
         
-     # Step 6: Build .NET solution IF this is a Visual Studio project
-     - name: Setup .NET
-       uses: actions/setup-dotnet@v4
-       with:
-        dotnet-version: 8.0.x
-        
-     - name: Build .NET Solution
-       run: |
-         if ls *.sln >/dev/null 2>&1; then
+  # Step 5: Build .NET Solution
+  - name: 'mcr.microsoft.com/dotnet/sdk:8.0'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        if ls *.sln >/dev/null 2>&1; then
           dotnet restore
-           dotnet build --configuration Release --no-restore
-         else
+          dotnet build --configuration Release --no-restore
+        else
           echo "No .sln file found – skipping .NET build"
-         fi
-        
-      # Step 7: Upload coursework artefacts (exam proof)
-      - name: Upload build artefacts
-        uses: actions/upload-artifact@v4
-        with:
-         name: greenfield-local-hub-exam-output
-          path: |
-              .
+        fi
+
+# Note: Cloud Build handles artifacts differently than GitHub. 
+# This will upload the entire workspace to a GCS bucket.
+artifacts:
+  objects:
+    location: 'gs://YOUR_BUCKET_NAME/build-artifacts/'
+    paths: ['**']
