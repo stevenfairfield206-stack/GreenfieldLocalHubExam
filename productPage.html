@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - GLH</title>
+    <link rel="stylesheet" href="CSS/productStyle.css">
+    <link rel="icon" type="image/png" href="Images/GLHLogo.png">
+</head>
+
+<body>
+
+    <div class="topbar">
+        <a href="Home.html"><img src="Images/GLHLogo.png" alt="Greenfield Local Hub Logo"></a>
+
+        <nav>
+            <a href="Home.html">Home</a>
+            <a href="aboutUs.html">About Us</a>
+            <a href="productPage.html">Our Products</a>
+        </nav>
+
+        <div class="iconWrapper">
+
+            <a id="accessibilityClick">
+                <img src="Images/accessibilityWhite.png" onmouseover="changeAccessibility1()" onmouseout="changeAccessibility2()" alt="Accessibility Options Button" class="Accessibility" id="accessibilityImg">
+            </a>
+
+            <div id="accessibilityModal" class="modal">
+                <div class="accessibilityContent">
+                    <span class="closeAccessibility">&times;</span>
+                    <h2>Accessibility Options</h2>
+                        
+                    <div class="accessItem">
+                        <p>Text Size</p>
+                        <button onclick="increaseSize()">A+</button>
+                        <button onclick="decreaseSize()">A-</button>
+
+                    </div>
+
+                    <div class="accessItem">
+                        <p>High Contrast Mode</p>
+                        <button onclick="toggleContrast()">Toggle</button>
+
+                    </div>
+
+                    <div class="accessItem">
+                        <p>Dyslexia Friendly Font</p>
+                        <button onclick="toggleDyslexiaFont()">Toggle</button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <a id="avatarClick">
+                <img src="Images/avatarWhite.png" onmouseover="changeAvatar1()" onmouseout="changeAvatar2()" alt="Avatar Image" class="Avatar" id="avatarImg">
+            </a>
+
+                <div id="loginModal" class="modal">
+                    <div class="modalContent">
+                        <span class="closeLogin">&times;</span>
+                        <h2>Please Login</h2>
+                        <form id="loginForm" novalidate>
+                            
+                            <input type="text" id="username" placeholder="Username" required>
+                            <small id="usernameError" class="errorMsg"></small>
+
+                            <input type="password" id="password" placeholder="Password" required minlength="8">
+                            <small id="passwordError" class="errorMsg"></small>
+                        
+                            <button type="submit" class="loginSubmit">Login</button>
+                        </form>
+
+                    </div>
+
+                </div>
+                
+        </div>
+
+    </div>
+
+    <main class="productPage">
+
+    <!-- Page Title -->
+    <section class="pageHeader">
+        <h1>Our Products</h1>
+    </section>
+
+    <!-- Products Header + Basket -->
+
+ 
+    <div class="productHeaderRow">
+        <section class="productHeader">
+            <h2>Available Products</h2>
+        </section>
+
+        <button class="basketBtn" id="basketBtn">Basket</button>
+
+            <div id="basketModal" class="modal">
+                <div class="basketContent">
+                    <span class="closeBasket">&times;</span>
+                    <h2>Your Basket</h2>
+
+                    <div id="basketItems" class="basketItems"></div>
+
+                    <div class="basketSummary">
+                        <p id="basketTotal">Total: £0.00</p>
+                        <button class="checkoutBtn" id="checkoutBtn">Checkout</button>
+                    </div>
+                </div>
+            </div>
+
+    </div>
+
+
+
+    <!-- Product Grid -->
+    <section class="productGrid" id="productGrid"></section>
+    
+    <script src="JS/productScript.js"></script>
+</body>

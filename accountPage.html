@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account - GLH</title>
+    <link rel="stylesheet" href="CSS/accountStyle.css">
+    <link rel="icon" type="image/png" href="Images/GLHLogo.png">
+</head>
+
+<body>
+
+    <div class="topbar">
+        <a href="Home.html"><img src="Images/GLHLogo.png" alt="Greenfield Local Hub Logo"></a>
+
+        <nav>
+            <a href="Home.html">Home</a>
+            <a href="aboutUs.html">About Us</a>
+            <a href="productPage.html">Our Products</a>
+        </nav>
+
+        <div class="iconWrapper">
+
+            <a id="accessibilityClick">
+                <img src="Images/accessibilityWhite.png" onmouseover="changeAccessibility1()" onmouseout="changeAccessibility2()" alt="Accessibility Options Button" class="Accessibility" id="accessibilityImg">
+            </a>
+
+            <div id="accessibilityModal" class="modal">
+                <div class="accessibilityContent">
+                    <span class="closeAccessibility">&times;</span>
+                    <h2>Accessibility Options</h2>
+                        
+                    <div class="accessItem">
+                        <p>Text Size</p>
+                        <button onclick="increaseSize()">A+</button>
+                        <button onclick="decreaseSize()">A-</button>
+
+                    </div>
+
+                    <div class="accessItem">
+                        <p>High Contrast Mode</p>
+                        <button onclick="toggleContrast()">Toggle</button>
+
+                    </div>
+
+                    <div class="accessItem">
+                        <p>Dyslexia Friendly Font</p>
+                        <button onclick="toggleDyslexiaFont()">Toggle</button>
+
+                    </div>
+
+                </div>
+
+            </div>
+                
+        </div>
+
+    </div>
+
+
+<div class="accountWrapper">
+
+    <!-- SIDEBAR -->
+    <aside class="accountSidebar">
+        <h2 id="welcomeUser">Hello</h2>
+
+        <div class="sidebarButtons">
+            <div class="sidebarIndicator"></div>
+
+            <button data-section="overview" class="active">Overview</button>
+            <button data-section="details">Profile</button>
+            <button data-section="security">Security</button>
+            <button data-section="preferences">Preferences</button>
+            <button data-section="orders">Order History</button>
+            <button id="logoutBtn" class="logout">Logout</button>
+        </div>
+    </aside>
+
+        <!-- MAIN CONTENT -->
+    <main class="accountContent">
+
+        <!-- Overview / Dashboard -->
+        <section id="overview" class="accountSection active">
+
+            <h2>Account Overview</h2>
+
+            <div class="overviewGrid">
+                <div class="statCard">
+                    <h3>Orders</h3>
+                    <p>0</p>
+                </div>
+
+                <div class="statCard">
+                    <h3>Reward Points</h3>
+                    <p>120</p>
+                </div>
+
+                <div class="statCard">
+                    <h3>Saved Addresses</h3>
+                    <p>1</p>
+                </div>
+            </div>
+
+            <p class="overviewHint">
+                Manage your profile, preferences, and orders using the menu on the left.
+            </p>
+
+        </section>
+
+        <!-- Profile -->
+        <section id="details" class="accountSection">
+            <h2>Profile Information</h2>
+            <p class="sectionDesc">Update your personal information below.</p>
+
+            <div class="card">
+                <label>First Name</label>
+                <input type="text" id="firstName">
+
+                <label>Last Name</label>
+                <input type="text" id="lastName">
+
+                <label>Phone Number</label>
+                <input type="tel" id="phone">
+
+                <label>Email</label>
+                <input type="email" id="email">
+
+                <button class="primary" id="saveProfile">Save Changes</button>
+
+            </div>
+
+        </section>
+
+        <!-- Security -->
+        <section id="security" class="accountSection">
+            <h2>Security</h2>
+
+            <div class="card">
+                <input type="password" placeholder="Current Password">
+                <input type="password" placeholder="New Password">
+                <input type="password" placeholder="Confirm New Password">
+                <button class="updatePassword">Update Password</button>
+            </div>
+        </section>
+
+        <!-- Preferences -->
+        <section id="preferences" class="accountSection">
+            <h2>Preferences</h2>
+
+            <div class="card checkboxGroup">
+                <label><input type="checkbox" id="emailNotif"> Email notifications</label>
+                <label><input type="checkbox" id="promoNotif"> Promotional offers</label>
+                <label><input type="checkbox"> Product updates</label>
+                <button class="primary">Save Preferences</button>
+            </div>
+        </section>
+
+        
+        <section id="orders" class="accountSection">
+            <h2>Order History</h2>
+
+            <div class="card">
+                <p>You haven't placed any orders yet.</p>
+            </div>
+        </section>
+
+
+
+    </main>
+
+
+</div>
+
+
+    <script src="JS/accountScript.js"></script>
+</body>

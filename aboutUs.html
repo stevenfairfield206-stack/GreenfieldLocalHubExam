@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - GLH</title>
+    <link rel="stylesheet" href="CSS/aboutUsStyle.css">
+    <link rel="icon" type="image/png" href="Images/GLHLogo.png">
+</head>
+
+<body>
+
+    <div class="topbar">
+        <a href="Home.html"><img src="Images/GLHLogo.png" alt="Greenfield Local Hub Logo"></a>
+
+        <nav>
+            <a href="Home.html">Home</a>
+            <a href="aboutUs.html">About Us</a>
+            <a href="productPage.html">Our Products</a>
+        </nav>
+
+        <div class="iconWrapper">
+
+            <a id="accessibilityClick">
+                <img src="Images/accessibilityWhite.png" onmouseover="changeAccessibility1()" onmouseout="changeAccessibility2()" alt="Accessibility Options Button" class="Accessibility" id="accessibilityImg">
+            </a>
+
+            <div id="accessibilityModal" class="modal">
+                <div class="accessibilityContent">
+                    <span class="closeAccessibility">&times;</span>
+                    <h2>Accessibility Options</h2>
+                        
+                    <div class="accessItem">
+                        <p>Text Size</p>
+                        <button onclick="increaseSize()">A+</button>
+                        <button onclick="decreaseSize()">A-</button>
+
+                    </div>
+
+                    <div class="accessItem">
+                        <p>High Contrast Mode</p>
+                        <button onclick="toggleContrast()">Toggle</button>
+
+                    </div>
+
+                    <div class="accessItem">
+                        <p>Dyslexia Friendly Font</p>
+                        <button onclick="toggleDyslexiaFont()">Toggle</button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <a id="avatarClick">
+                <img src="Images/avatarWhite.png" onmouseover="changeAvatar1()" onmouseout="changeAvatar2()" alt="Avatar Image" class="Avatar" id="avatarImg">
+            </a>
+
+                <div id="loginModal" class="modal">
+                    <div class="modalContent">
+                        <span class="closeLogin">&times;</span>
+                        <h2>Please Login</h2>
+                        <form id="loginForm" novalidate>
+                            
+                            <input type="text" id="username" placeholder="Username" required>
+                            <small id="usernameError" class="errorMsg"></small>
+
+                            <input type="password" id="password" placeholder="Password" required minlength="8">
+                            <small id="passwordError" class="errorMsg"></small>
+                        
+                            <button type="submit" class="loginSubmit">Login</button>
+                        </form>
+
+                    </div>
+
+                </div>
+                
+        </div>
+
+    </div>
+
+
+<div class="aboutUsBackgroundImage">
+    <h2>What <span class="highlightWord">We</span> Do</h2>
+
+</div>
+
+<div class="aboutUsGrid">
+        
+    <!-- Top row -->
+    <div class="box">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quis tortor lectus. Aliquam vel finibus tortor, vehicula tempor diam. Suspendisse tristique ac libero id laoreet. 
+        Nullam in libero sodales, convallis mi non, porta leo. Integer ut neque congue, vehicula erat vitae, mollis libero. Suspendisse fringilla quis neque id varius. Aenean egestas velit eget accumsan venenatis. 
+        In pretium neque eget augue mattis posuere. Ut vel lacus condimentum, molestie risus non, pharetra risus. Proin nec ipsum in diam vehicula porttitor. Integer facilisis viverra tortor, 
+        sed lobortis elit cursus et. Quisque euismod et metus non facilisis. Nunc fringilla dui nec tellus vehicula, at fringilla odio viverra.</div>
+
+    <img class="middleImage" src="Images/middleImageGrid.jpeg" alt="Large Image Placeholder">
+
+    <div class="box">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quis tortor lectus. Aliquam vel finibus tortor, vehicula tempor diam. Suspendisse tristique ac libero id laoreet. 
+        Nullam in libero sodales, convallis mi non, porta leo. Integer ut neque congue, vehicula erat vitae, mollis libero. Suspendisse fringilla quis neque id varius. Aenean egestas velit eget accumsan venenatis. 
+        In pretium neque eget augue mattis posuere. Ut vel lacus condimentum, molestie risus non, pharetra risus. Proin nec ipsum in diam vehicula porttitor. Integer facilisis viverra tortor, 
+        sed lobortis elit cursus et. Quisque euismod et metus non facilisis. Nunc fringilla dui nec tellus vehicula, at fringilla odio viverra.</div>
+
+
+    <div class="Line1"></div>
+    <div class="Line1"></div>
+
+    <!-- Middle row -->
+    <div class="box">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quis tortor lectus. Aliquam vel finibus tortor, vehicula tempor diam. Suspendisse tristique ac libero id laoreet. 
+        Nullam in libero sodales, convallis mi non, porta leo. Integer ut neque congue, vehicula erat vitae, mollis libero. Suspendisse fringilla quis neque id varius. Aenean egestas velit eget accumsan venenatis. 
+        In pretium neque eget augue mattis posuere. Ut vel lacus condimentum, molestie risus non, pharetra risus. Proin nec ipsum in diam vehicula porttitor. Integer facilisis viverra tortor, 
+        sed lobortis elit cursus et. Quisque euismod et metus non facilisis. Nunc fringilla dui nec tellus vehicula, at fringilla odio viverra.</div>
+    
+    <div class="box">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quis tortor lectus. Aliquam vel finibus tortor, vehicula tempor diam. Suspendisse tristique ac libero id laoreet. 
+        Nullam in libero sodales, convallis mi non, porta leo. Integer ut neque congue, vehicula erat vitae, mollis libero. Suspendisse fringilla quis neque id varius. Aenean egestas velit eget accumsan venenatis. 
+        In pretium neque eget augue mattis posuere. Ut vel lacus condimentum, molestie risus non, pharetra risus. Proin nec ipsum in diam vehicula porttitor. Integer facilisis viverra tortor, 
+        sed lobortis elit cursus et. Quisque euismod et metus non facilisis. Nunc fringilla dui nec tellus vehicula, at fringilla odio viverra.</div>
+
+</div>
+
+    <!-- Bottom row -->
+<div class="bottomSection">
+    <div class="bottomText">
+        <div class="box">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quis tortor lectus. Aliquam vel finibus tortor, vehicula tempor diam. Suspendisse tristique ac libero id laoreet. 
+        Nullam in libero sodales, convallis mi non, porta leo. Integer ut neque congue, vehicula erat vitae, mollis libero. Suspendisse fringilla quis neque id varius. Aenean egestas velit eget accumsan venenatis. 
+        In pretium neque eget augue mattis posuere. Ut vel lacus condimentum, molestie risus non, pharetra risus. Proin nec ipsum in diam vehicula porttitor. Integer facilisis viverra tortor, 
+        sed lobortis elit cursus et. Quisque euismod et metus non facilisis. Nunc fringilla dui nec tellus vehicula, at fringilla odio viverra.</div>
+    </div>
+
+    <img src="Images/rightImageGrid.jpeg" alt="Side Image Placeholder" class="bottomImg">
+</div>
+
+
+    <script src="JS/aboutUs.js"></script>
+
+</body>

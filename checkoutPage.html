@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - GLH</title>
+    <link rel="stylesheet" href="CSS/checkoutStyle.css">
+    <link rel="icon" type="image/png" href="Images/GLHLogo.png">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+</head>
+
+<body>
+
+    <div class="topbar">
+        <a href="Home.html"><img src="Images/GLHLogo.png" alt="Greenfield Local Hub Logo"></a>
+
+        <nav>
+            <a href="Home.html">Home</a>
+            <a href="aboutUs.html">About Us</a>
+            <a href="productPage.html">Our Products</a>
+        </nav>
+
+        <div class="iconWrapper">
+
+            <a id="accessibilityClick">
+                <img src="Images/accessibilityWhite.png" onmouseover="changeAccessibility1()" onmouseout="changeAccessibility2()" alt="Accessibility Options Button" class="Accessibility" id="accessibilityImg">
+            </a>
+
+            <div id="accessibilityModal" class="modal">
+                <div class="accessibilityContent">
+                    <span class="closeAccessibility">&times;</span>
+                    <h2>Accessibility Options</h2>
+                        
+                    <div class="accessItem">
+                        <p>Text Size</p>
+                        <button onclick="increaseSize()">A+</button>
+                        <button onclick="decreaseSize()">A-</button>
+
+                    </div>
+
+                    <div class="accessItem">
+                        <p>High Contrast Mode</p>
+                        <button onclick="toggleContrast()">Toggle</button>
+
+                    </div>
+
+                    <div class="accessItem">
+                        <p>Dyslexia Friendly Font</p>
+                        <button onclick="toggleDyslexiaFont()">Toggle</button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <a id="avatarClick">
+                <img src="Images/avatarWhite.png" onmouseover="changeAvatar1()" onmouseout="changeAvatar2()" alt="Avatar Image" class="Avatar" id="avatarImg">
+            </a>
+
+                <div id="loginModal" class="modal">
+                    <div class="modalContent">
+                        <span class="closeLogin">&times;</span>
+                        <h2>Please Login</h2>
+                        <form id="loginForm" novalidate>
+                            
+                            <input type="text" id="username" placeholder="Username" required>
+                            <small id="usernameError" class="errorMsg"></small>
+
+                            <input type="password" id="password" placeholder="Password" required minlength="8">
+                            <small id="passwordError" class="errorMsg"></small>
+                        
+                            <button type="submit" class="loginSubmit">Login</button>
+                        </form>
+
+                    </div>
+
+                </div>
+                
+        </div>
+
+    </div>
+
+    <main class="checkoutWrapper">
+        <aside class="orderSummary">
+            <h2>Your Order</h2>
+
+            <ul id="orderItems"></ul>
+
+            <hr>
+
+            <p><strong>Subtotal:</strong> <span id="orderSubtotal">£0.00</span></p>
+        </aside>
+
+        <!-- Checkout Form -->
+        <section class="checkoutCard">
+
+            <h1>Greenfield Local Hub<br>Checkout</h1>
+
+            <!-- Progress Steps -->
+            <div class="checkoutSteps">
+                <div class="step active" data-step="1">
+                    <span>1</span>
+                    <p>Shipping / Collection Details</p>
+                </div>
+                <div class="step" data-step="2">
+                    <span>2</span>
+                    <p>Payment Options</p>
+                </div>
+                <div class="step" data-step="3">
+                    <span>3</span>
+                    <p>Order Confirmation<br>and Tracking</p>
+                </div>
+            </div>
+
+            <!-- Checkout Form Itself -->
+            <form class="checkoutForm" id="checkoutForm">
+                <div class="progressBar">
+                    <div class="progressFill" id="progressFill"></div>
+                </div>
+
+                <!-- STEP 1 -->
+                <div class="checkoutStepContent active" data-step="1">
+                    
+                    <div class="row">
+                        <input type="text" placeholder="First Name" required>
+                        <input type="text" placeholder="Last Name" required>
+                    </div>
+
+                    <hr class="checkoutDivider">
+
+                    <div class="deliveryOptions">
+                        <label class="deliveryOption">
+                            <input type="radio" name="deliveryMethod" value="delivery" checked>
+                            Home Delivery
+                        </label>
+
+                        <label class="deliveryOption">
+                            <input type="radio" name="deliveryMethod" value="collection">
+                            Collect in Store
+                        </label>
+                    </div>
+
+
+                    <input id="shippingAddress" type="text" placeholder="Shipping Address" required>
+
+                    <div class="row">
+                        <input id="city" type="text" placeholder="Town / City" required>
+                        <input id="postcode" type="text" placeholder="Postcode" required>
+                    </div>
+
+                    <input type="text" placeholder="County" required>
+                    <input type="tel" placeholder="Phone Number" required>
+                    <input type="email" placeholder="Email (Optional)">
+
+                    <p id="step1Error" class="errorMsg" aria-live="polite"></p>
+
+                    <button type="button" id="continueToPayment" class="checkoutBtn">
+                        Continue to Payment
+                    </button>
+                </div>
+
+                <!-- STEP 2 -->
+                <div class="checkoutStepContent" data-step="2">
+
+                    <!-- Cardholder Name -->
+                    <input type="text" id="cardName" placeholder="Cardholder Name">
+                    <small class="errorMsg" id="cardNameError"></small>
+
+                    <!-- Card Number -->
+                    <input type="text" id="cardNumber" placeholder="Card Number">
+                    <small class="errorMsg" id="cardNumberError"></small>
+
+                    <!-- Expiry + CVV -->
+                    <div class="row">
+                        <div>
+                            <input type="text" id="expiryDate" placeholder="MM/YY">
+                            <small class="errorMsg" id="expiryError"></small>
+                        </div>
+
+                        <div>
+                            <input type="text" id="cvv" placeholder="CVV">
+                            <small class="errorMsg" id="cvvError"></small>
+                        </div>
+                    </div>
+
+                    <button type="button" id="continueToConfirm" class="checkoutBtn">
+                        Continue to Confirmation
+                    </button>
+
+                </div>
+
+
+
+                <!-- STEP 3 -->
+                <div class="checkoutStepContent" data-step="3">
+
+                    <p id="confirmationText" style="text-align: center; font-family: GeosansLight, sans-serif; font-size: 20px;">
+                        Order confirmed! Below is a preview of your delivery location.
+                    </p>
+
+                    <p style="text-align: center; font-family: GeosansLight, sans-serif; font-size: 20px;">
+                        Order reference:
+                        <strong id="orderReference"></strong>
+                    </p>
+
+                    <div id="map" style="
+                        height: 300px;
+                        width: 100%;
+                        margin-top: 20px;
+                        border-radius: 10px;
+                    "></div>
+
+                </div>
+
+            </form>
+
+        </section>
+
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="JS/checkoutScript.js"></script>
+</body>
