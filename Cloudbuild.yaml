@@ -1,3 +1,6 @@
+options:
+  logging: CLOUD_LOGGING_ONLY
+
 steps:
   # Step 1: Checkout is automatic in Cloud Build, but we can list files
   - name: 'gcr.io/cloud-builders/gcloud'
