@@ -16,7 +16,7 @@ steps:
       else
         echo "No HTML files found"
       fi
-        
+        -
    - name: CSS validation
      run: |
        if ls *.css >/dev/null 2>&1; then
