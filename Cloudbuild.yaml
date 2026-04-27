@@ -66,5 +66,5 @@ steps:
 # This will upload the entire workspace to a GCS bucket.
 artifacts:
   objects:
-    location: 'gs://YOUR_BUCKET_NAME/build-artifacts/'
+    location: 'gs://glhbucket/build-artifacts/'
     paths: ['**']
