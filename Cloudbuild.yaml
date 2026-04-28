@@ -2,6 +2,33 @@ options:
   logging: CLOUD_LOGGING_ONLY
 
 steps:
+
+  # Step 1: Build the container image using the Dockerfile in your repo
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/greenfieldlocalhubexam:$COMMIT_SHA', '.']
+
+  # Step 2: Push the image to Google Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/greenfieldlocalhubexam:$COMMIT_SHA']
+
+  # Step 3: Deploy the new image to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'greenfieldlocalhubexam'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/greenfieldlocalhubexam:$COMMIT_SHA'
+      - '--region'
+      - 'europe-west2'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+
+images:
+  - 'gcr.io/$PROJECT_ID/greenfieldlocalhubexam:$COMMIT_SHA'
+
   # Step 1: Checkout is automatic in Cloud Build, but we can list files
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'bash'
