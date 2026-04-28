@@ -3,7 +3,7 @@ options:
 
 steps:
 
-  # Step 1: Build the container image using the Dockerfile in your repo
+  # Step 1: Build the container image
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'gcr.io/$PROJECT_ID/greenfieldlocalhubexam:$COMMIT_SHA', '.']
 
@@ -12,8 +12,7 @@ steps:
     args: ['push', 'gcr.io/$PROJECT_ID/greenfieldlocalhubexam:$COMMIT_SHA']
 
   # Step 3: Deploy the new image to Cloud Run
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    entrypoint: gcloud
+  - name: 'gcr.io/cloud-builders/gcloud'
     args:
       - 'run'
       - 'deploy'
@@ -25,6 +24,20 @@ steps:
       - '--platform'
       - 'managed'
       - '--allow-unauthenticated'
+
+  # (Optional) Step 4: Verify deployment status
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - 'run'
+      - 'services'
+      - 'describe'
+      - 'greenfieldlocalhubexam'
+      - '--region'
+      - 'europe-west2'
+      - '--format'
+      - 'value(status.conditions[0].status)'
+
+  # ... (Your existing validation and .NET build steps can remain here if needed) ...
 
 images:
   - 'gcr.io/$PROJECT_ID/greenfieldlocalhubexam:$COMMIT_SHA'
