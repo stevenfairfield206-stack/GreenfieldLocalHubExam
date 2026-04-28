@@ -1,19 +1,13 @@
-# Use the SDK image to build
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /src
+# Use Nginx to serve static content
+FROM nginx:alpine
 
-# Copy everything and restore
-COPY . .
-RUN dotnet restore
+# Copy all your HTML files into the Nginx public folder
+COPY . /usr/share/nginx/html
 
-# Build and publish. 
-# NOTE: If your .csproj is in a folder, change "." to that folder name
-RUN dotnet publish -c Release -o /app
+# Expose port 8080 (Cloud Run prefers 8080 by default)
+EXPOSE 8080
 
-# Use the runtime image for the final container
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
-WORKDIR /app
-COPY --from=build /app .
+# Configure Nginx to listen on 8080 instead of 80
+RUN sed -i 's/listen       80;/listen       8080;/g' /etc/nginx/conf.d/default.conf
 
-# IMPORTANT: Replace 'GreenfieldLocalHubExam.dll' with your actual DLL name
-ENTRYPOINT ["dotnet", "GreenfieldLocalHubExam.dll"]
+CMD ["nginx", "-g", "daemon off;"]
