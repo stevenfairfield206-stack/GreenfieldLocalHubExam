@@ -2,95 +2,11 @@ options:
   logging: CLOUD_LOGGING_ONLY
 
 steps:
-
-  # Step 1: Build the container image
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/$PROJECT_ID/greenfieldlocalhubexam:$COMMIT_SHA', '.']
-
-  # Step 2: Push the image to Google Container Registry
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/greenfieldlocalhubexam:$COMMIT_SHA']
-
-  # Step 3: Deploy the new image to Cloud Run
-  - name: 'gcr.io/cloud-builders/gcloud'
-    args:
-      - 'run'
-      - 'deploy'
-      - 'greenfieldlocalhubexam'
-      - '--image'
-      - 'gcr.io/$PROJECT_ID/greenfieldlocalhubexam:$COMMIT_SHA'
-      - '--region'
-      - 'europe-west2'
-      - '--platform'
-      - 'managed'
-      - '--allow-unauthenticated'
-
-  # (Optional) Step 4: Verify deployment status
-  - name: 'gcr.io/cloud-builders/gcloud'
-    args:
-      - 'run'
-      - 'services'
-      - 'describe'
-      - 'greenfieldlocalhubexam'
-      - '--region'
-      - 'europe-west2'
-      - '--format'
-      - 'value(status.conditions[0].status)'
-
-  # ... (Your existing validation and .NET build steps can remain here if needed) ...
-
-images:
-  - 'gcr.io/$PROJECT_ID/greenfieldlocalhubexam:$COMMIT_SHA'
-
-  # Step 1: Checkout is automatic in Cloud Build, but we can list files
-  - name: 'gcr.io/cloud-builders/gcloud'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        ls -R
-
-  # Step 2: Validate HTML files
-  - name: 'gcr.io/cloud-builders/gcloud'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        if ls *.html >/dev/null 2>&1; then
-          echo "HTML files detected"
-          echo "Basic HTML validation passed"
-        else
-          echo "No HTML files found"
-        fi
-
-  # Step 3: CSS validation checks   
-  - name: 'gcr.io/cloud-builders/gcloud'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        if ls *.css >/dev/null 2>&1; then
-          echo "CSS files detected"
-          echo "Basic CSS validation passed"
-        else
-          echo "No CSS files found"
-        fi
-        
-  # Step 4: Validate JavaScript files
-  - name: 'gcr.io/cloud-builders/gcloud'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        if ls *.js >/dev/null 2>&1; then
-          echo "JavaScript files detected"
-          echo "Basic JS validation passed"
-        else
-          echo "No JavaScript files found"
-        fi
-        
-  # Step 5: Build .NET Solution
+  # --- PHASE 1: VALIDATION & BUILD ---
+  
+  # 1. Run .NET Build/Test first. If this fails, the whole pipeline stops.
   - name: 'mcr.microsoft.com/dotnet/sdk:8.0'
+    id: 'dotnet-build'
     entrypoint: 'bash'
     args:
       - '-c'
@@ -99,12 +15,60 @@ images:
           dotnet restore
           dotnet build --configuration Release --no-restore
         else
-          echo "No .sln file found – skipping .NET build"
+          echo "No .sln file found – proceeding with container build"
         fi
 
-# Note: Cloud Build handles artifacts differently than GitHub. 
-# This will upload the entire workspace to a GCS bucket.
+  # 2. Basic file validation (Optional, but kept from your original)
+  - name: 'gcr.io/cloud-builders/gcloud'
+    id: 'validate-files'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "Checking for essential files..."
+        ls *.html *.css *.js || echo "Some web assets missing, continuing..."
+
+  # --- PHASE 2: CONTAINERIZE ---
+
+  # 3. Build the container image (Assumes you have a Dockerfile)
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'docker-build'
+    args: [
+      'build', 
+      '-t', 'europe-west2-docker.pkg.dev/$PROJECT_ID/run-repo/greenfieldlocalhubexam:$COMMIT_SHA', 
+      '.'
+    ]
+
+  # 4. Push the image to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'docker-push'
+    args: [
+      'push', 
+      'europe-west2-docker.pkg.dev/$PROJECT_ID/run-repo/greenfieldlocalhubexam:$COMMIT_SHA'
+    ]
+
+  # --- PHASE 3: DEPLOY ---
+
+  # 5. Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: 'deploy-cloud-run'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'greenfieldlocalhubexam'
+      - '--image'
+      - 'europe-west2-docker.pkg.dev/$PROJECT_ID/run-repo/greenfieldlocalhubexam:$COMMIT_SHA'
+      - '--region'
+      - 'europe-west2'
+      - '--allow-unauthenticated'
+
+# Store the image for reference
+images:
+  - 'europe-west2-docker.pkg.dev/$PROJECT_ID/run-repo/greenfieldlocalhubexam:$COMMIT_SHA'
+
+# Artifacts backup to GCS
 artifacts:
   objects:
-    location: 'gs://glhbucket/build-artifacts/'
+    location: 'gs://glhbucket/build-artifacts/$BUILD_ID'
     paths: ['**']
