@@ -2,57 +2,17 @@ options:
   logging: CLOUD_LOGGING_ONLY
 
 steps:
-  # --- PHASE 1: VALIDATION & BUILD ---
-  
-  # 1. Run .NET Build/Test first. If this fails, the whole pipeline stops.
-  - name: 'mcr.microsoft.com/dotnet/sdk:8.0'
-    id: 'dotnet-build'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        if ls *.sln >/dev/null 2>&1; then
-          dotnet restore
-          dotnet build --configuration Release --no-restore
-        else
-          echo "No .sln file found – proceeding with container build"
-        fi
+  # 1. Build the container using the Dockerfile we just created
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'docker-build'
+    args: ['build', '-t', 'europe-west2-docker.pkg.dev/$PROJECT_ID/run-repo/greenfieldlocalhubexam:$COMMIT_SHA', '.']
 
-  # 2. Basic file validation (Optional, but kept from your original)
-  - name: 'gcr.io/cloud-builders/gcloud'
-    id: 'validate-files'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        echo "Checking for essential files..."
-        ls *.html *.css *.js || echo "Some web assets missing, continuing..."
-
-  # --- PHASE 2: CONTAINERIZE ---
-
-  # New Step 3: Build and Push using .NET SDK (No Dockerfile needed!)
-  - name: 'mcr.microsoft.com/dotnet/sdk:8.0'
-    id: 'dotnet-publish-container'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        dotnet publish -c Release \
-        -p:ContainerImageName=europe-west2-docker.pkg.dev/$PROJECT_ID/run-repo/greenfieldlocalhubexam \
-        -p:ContainerImageTag=$COMMIT_SHA \
-        -p:PublishProfile=DefaultContainer
-
-  # 4. Push the image to Artifact Registry
+  # 2. Push the image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
     id: 'docker-push'
-    args: [
-      'push', 
-      'europe-west2-docker.pkg.dev/$PROJECT_ID/run-repo/greenfieldlocalhubexam:$COMMIT_SHA'
-    ]
+    args: ['push', 'europe-west2-docker.pkg.dev/$PROJECT_ID/run-repo/greenfieldlocalhubexam:$COMMIT_SHA']
 
-  # --- PHASE 3: DEPLOY ---
-
-  # 5. Deploy to Cloud Run
+  # 3. Deploy to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     id: 'deploy-cloud-run'
     entrypoint: gcloud
@@ -66,12 +26,5 @@ steps:
       - 'europe-west2'
       - '--allow-unauthenticated'
 
-# Store the image for reference
 images:
   - 'europe-west2-docker.pkg.dev/$PROJECT_ID/run-repo/greenfieldlocalhubexam:$COMMIT_SHA'
-
-# Artifacts backup to GCS
-artifacts:
-  objects:
-    location: 'gs://glhbucket/build-artifacts/$BUILD_ID'
-    paths: ['**']
