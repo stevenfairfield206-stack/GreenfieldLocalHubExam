@@ -30,14 +30,17 @@ steps:
 
   # --- PHASE 2: CONTAINERIZE ---
 
-  # 3. Build the container image (Assumes you have a Dockerfile)
-  - name: 'gcr.io/cloud-builders/docker'
-    id: 'docker-build'
-    args: [
-      'build', 
-      '-t', 'europe-west2-docker.pkg.dev/$PROJECT_ID/run-repo/greenfieldlocalhubexam:$COMMIT_SHA', 
-      '.'
-    ]
+  # New Step 3: Build and Push using .NET SDK (No Dockerfile needed!)
+  - name: 'mcr.microsoft.com/dotnet/sdk:8.0'
+    id: 'dotnet-publish-container'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        dotnet publish -c Release \
+        -p:ContainerImageName=europe-west2-docker.pkg.dev/$PROJECT_ID/run-repo/greenfieldlocalhubexam \
+        -p:ContainerImageTag=$COMMIT_SHA \
+        -p:PublishProfile=DefaultContainer
 
   # 4. Push the image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
